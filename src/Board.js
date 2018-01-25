@@ -115,11 +115,11 @@
     hasColConflictAt: function(colIndex) {
       //return false; // fixme
       //for each element in attributes
-         // key is the index of a column
-         // attributes[key][0] key = 0
-         // first item in a column
-         // second item in the first column
-         // attributes[key][0] key = 1
+      // key is the index of a column
+      // attributes[key][0] key = 0
+      // first item in a column
+      // second item in the first column
+      // attributes[key][0] key = 1
       var obj = {};
 
       var attributes = this.attributes;
@@ -167,12 +167,35 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      var colIndex = majorDiagonalColumnIndexAtFirstRow;
+      var rowIndex = 0;
+      var attributes = this.attributes;
+      //debugger;
+      var obj = {};
+      while (colIndex < attributes.n) {
+        var item = attributes[rowIndex][colIndex];
+        if (item !== 0 && obj.hasOwnProperty(item)) {
+          return true;
+        } else {
+          obj[item] = item;
+        }
+        colIndex++;
+        rowIndex++;
+      }
+      return false;
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
-      return false; // fixme
+      var n = this.attributes.n;
+      var conflict = false;
+      for (var i = 0; i < n - 1; i++) {
+        conflict = this.hasMajorDiagonalConflictAt(i);
+        if (conflict) {
+          return true;
+        }
+      }
+      return conflict;
     },
 
 
