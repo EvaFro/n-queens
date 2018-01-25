@@ -79,7 +79,17 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
-      return this.attributes[rowIndex].indexOf(1) > -1;
+      var obj = {};
+      var row = this.attributes[rowIndex];
+      var flag = false;
+      row.forEach(function(item) {
+        if (item !== 0 && obj.hasOwnProperty(item)) {
+          flag = true;
+        } else {
+          obj[item] = item;
+        }
+      });
+      return flag;
     },
 
     // test if any rows on this board contain conflicts
@@ -103,19 +113,50 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
-      return false; // fixme
+      //return false; // fixme
+      //for each element in attributes
+         // key is the index of a column
+         // attributes[key][0] key = 0
+         // first item in a column
+         // second item in the first column
+         // attributes[key][0] key = 1
+      var obj = {};
+
+      var attributes = this.attributes;
+      for (var key in attributes) {
+        if (key !== 'n') {     
+          var item = attributes[key][colIndex];
+          if (item !== 0 && obj.hasOwnProperty(item)) {
+            return true;
+          } else {
+            obj[item] = item;
+          }
+        }
+      }
+      //debugger;
+      return false;
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-    //create column array from matrix
-    //for each column in this.attributes
-    //check if there is more than one occurrence
-    //of 1
-    //if true
-    //return true
-    //else
-    //return false 
+      //create column array from matrix
+      //for each column in this.attributes
+      //check if there is more than one occurrence
+      //of 1
+      //if true
+      //return true
+      //else
+      //return false
+
+      var attributes = this.attributes;
+      for (var key in attributes) {
+        if (key !== 'n') {
+          var conflict = this.hasColConflictAt(key);
+          if (conflict) {
+            return true;
+          }
+        }
+      }
       return false; // fixme
     },
 
