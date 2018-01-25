@@ -28,7 +28,7 @@
       this.get(rowIndex)[colIndex] = + !this.get(rowIndex)[colIndex];
       this.trigger('change');
     },
-
+    // Listen to toby
     _getFirstRowColumnIndexForMajorDiagonalOn: function(rowIndex, colIndex) {
       return colIndex - rowIndex;
     },
@@ -62,7 +62,7 @@
     },
 
 
-/*
+    /*
          _             _     _
      ___| |_ __ _ _ __| |_  | |__   ___ _ __ ___ _
     / __| __/ _` | '__| __| | '_ \ / _ \ '__/ _ (_)
@@ -79,12 +79,31 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
-      return false; // fixme
+      var obj = {};
+      var row = this.attributes[rowIndex];
+      var flag = false;
+      row.forEach(function(item) {
+        if (item !== 0 && obj.hasOwnProperty(item)) {
+          flag = true;
+        } else {
+          obj[item] = item;
+        }
+      });
+      return flag;
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      return false; // fixme
+      var attributes = this.attributes;
+      for (var key in attributes) {
+        if (key !== 'n') {
+          var conflict = this.hasRowConflictAt(key);
+          if (conflict) {
+            return true;
+          }
+        }
+      }
+      return false;
     },
 
 
@@ -94,11 +113,50 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
-      return false; // fixme
+      //return false; // fixme
+      //for each element in attributes
+      // key is the index of a column
+      // attributes[key][0] key = 0
+      // first item in a column
+      // second item in the first column
+      // attributes[key][0] key = 1
+      var obj = {};
+
+      var attributes = this.attributes;
+      for (var key in attributes) {
+        if (key !== 'n') {     
+          var item = attributes[key][colIndex];
+          if (item !== 0 && obj.hasOwnProperty(item)) {
+            return true;
+          } else {
+            obj[item] = item;
+          }
+        }
+      }
+      //debugger;
+      return false;
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
+      //create column array from matrix
+      //for each column in this.attributes
+      //check if there is more than one occurrence
+      //of 1
+      //if true
+      //return true
+      //else
+      //return false
+
+      var attributes = this.attributes;
+      for (var key in attributes) {
+        if (key !== 'n') {
+          var conflict = this.hasColConflictAt(key);
+          if (conflict) {
+            return true;
+          }
+        }
+      }
       return false; // fixme
     },
 
@@ -109,12 +167,56 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      var colIndex = majorDiagonalColumnIndexAtFirstRow;
+      var rowIndex = 0;
+      // simple a for loop before the while loop
+      // using the row index = i in the for loop
+      var attributes = this.attributes;
+      //debugger;
+      var obj = {};
+      while (colIndex < attributes.n) {
+        var item = attributes[rowIndex][colIndex];
+        if (item !== 0 && obj.hasOwnProperty(item)) {
+          return true;
+        } else {
+          obj[item] = item;
+        }
+        colIndex++;
+        rowIndex++;
+      }
+
+      rowIndex = majorDiagonalColumnIndexAtFirstRow;
+      colIndex = 0;
+     
+      var obj = {};
+      while (rowIndex < attributes.n) {
+        var item = attributes[rowIndex][colIndex];
+        if (item !== 0 && obj.hasOwnProperty(item)) {
+          return true;
+        } else {
+          obj[item] = item;
+        }
+        colIndex++;
+        rowIndex++;
+      }
+      return false;
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
-      return false; // fixme
+      // Listen to toby
+      // _getFirstRowColumnIndexForMajorDiagonalOn: function(rowIndex, colIndex) {
+      //   return colIndex - rowIndex;
+      // },
+      var n = this.attributes.n;
+      var conflict = false;
+      for (var i = 0; i < n - 1; i++) {
+        conflict = this.hasMajorDiagonalConflictAt(i);
+        if (conflict) {
+          return true;
+        }
+      }
+      return conflict;
     },
 
 
@@ -124,12 +226,57 @@
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      var attributes = this.attributes;
+      var colIndex = minorDiagonalColumnIndexAtFirstRow;
+      var rowIndex = 0;
+      // simple a for loop before the while loop
+      // using the row index = i in the for loop
+      
+      //debugger;
+      var obj = {};
+      while (colIndex >= 0) {
+        var item = attributes[rowIndex][colIndex];
+        if (item !== 0 && obj.hasOwnProperty(item)) {
+          return true;
+        } else {
+          obj[item] = item;
+        }
+        colIndex--;
+        rowIndex++;
+      }
+
+      
+      ///// THIS IS WHERE WE ARE AT
+      ///// USE YOUR BRAIN
+      ///// IT KNOWS THE ANSWER PROBABLY
+      rowIndex = 0;
+      colIndex = minorDiagonalColumnIndexAtFirstRow;
+     
+      var obj = {};
+      while (rowIndex >= 0) {
+        var item = attributes[rowIndex][colIndex];
+        if (item !== 0 && obj.hasOwnProperty(item)) {
+          return true;
+        } else {
+          obj[item] = item;
+        }
+        colIndex++;
+        rowIndex--;
+      }
+      return false;
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      return false; // fixme
+      var n = this.attributes.n;
+      var conflict = false;
+      for (var i = (n - 1); i >= 0; i--) {
+        conflict = this.hasMinorDiagonalConflictAt(i);
+        if (conflict) {
+          return true;
+        }
+      }
+      return conflict;
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
