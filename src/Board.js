@@ -245,15 +245,10 @@
         rowIndex++;
       }
 
-      
-      ///// THIS IS WHERE WE ARE AT
-      ///// USE YOUR BRAIN
-      ///// IT KNOWS THE ANSWER PROBABLY
-      rowIndex = 0;
-      colIndex = minorDiagonalColumnIndexAtFirstRow;
-     
+      rowIndex = attributes.n - 1;
+      colIndex = minorDiagonalColumnIndexAtFirstRow - 1;
       var obj = {};
-      while (rowIndex >= 0) {
+      while (rowIndex > 0) {
         var item = attributes[rowIndex][colIndex];
         if (item !== 0 && obj.hasOwnProperty(item)) {
           return true;
