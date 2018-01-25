@@ -28,7 +28,7 @@
       this.get(rowIndex)[colIndex] = + !this.get(rowIndex)[colIndex];
       this.trigger('change');
     },
-
+    // Listen to toby
     _getFirstRowColumnIndexForMajorDiagonalOn: function(rowIndex, colIndex) {
       return colIndex - rowIndex;
     },
@@ -169,10 +169,27 @@
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
       var colIndex = majorDiagonalColumnIndexAtFirstRow;
       var rowIndex = 0;
+      // simple a for loop before the while loop
+      // using the row index = i in the for loop
       var attributes = this.attributes;
       //debugger;
       var obj = {};
       while (colIndex < attributes.n) {
+        var item = attributes[rowIndex][colIndex];
+        if (item !== 0 && obj.hasOwnProperty(item)) {
+          return true;
+        } else {
+          obj[item] = item;
+        }
+        colIndex++;
+        rowIndex++;
+      }
+
+      rowIndex = majorDiagonalColumnIndexAtFirstRow;
+      colIndex = 0;
+     
+      var obj = {};
+      while (rowIndex < attributes.n) {
         var item = attributes[rowIndex][colIndex];
         if (item !== 0 && obj.hasOwnProperty(item)) {
           return true;
@@ -187,6 +204,10 @@
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
+      // Listen to toby
+      // _getFirstRowColumnIndexForMajorDiagonalOn: function(rowIndex, colIndex) {
+      //   return colIndex - rowIndex;
+      // },
       var n = this.attributes.n;
       var conflict = false;
       for (var i = 0; i < n - 1; i++) {
@@ -205,12 +226,57 @@
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      var attributes = this.attributes;
+      var colIndex = minorDiagonalColumnIndexAtFirstRow;
+      var rowIndex = 0;
+      // simple a for loop before the while loop
+      // using the row index = i in the for loop
+      
+      //debugger;
+      var obj = {};
+      while (colIndex >= 0) {
+        var item = attributes[rowIndex][colIndex];
+        if (item !== 0 && obj.hasOwnProperty(item)) {
+          return true;
+        } else {
+          obj[item] = item;
+        }
+        colIndex--;
+        rowIndex++;
+      }
+
+      
+      ///// THIS IS WHERE WE ARE AT
+      ///// USE YOUR BRAIN
+      ///// IT KNOWS THE ANSWER PROBABLY
+      rowIndex = 0;
+      colIndex = minorDiagonalColumnIndexAtFirstRow;
+     
+      var obj = {};
+      while (rowIndex >= 0) {
+        var item = attributes[rowIndex][colIndex];
+        if (item !== 0 && obj.hasOwnProperty(item)) {
+          return true;
+        } else {
+          obj[item] = item;
+        }
+        colIndex++;
+        rowIndex--;
+      }
+      return false;
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      return false; // fixme
+      var n = this.attributes.n;
+      var conflict = false;
+      for (var i = (n - 1); i >= 0; i--) {
+        conflict = this.hasMinorDiagonalConflictAt(i);
+        if (conflict) {
+          return true;
+        }
+      }
+      return conflict;
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
