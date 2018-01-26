@@ -35,27 +35,53 @@ window.createEmptyMatrix = function(n) {
 };
 
 
-window.findNRooksSolution = function(n, start = 0) {
-  var solution = [];
-  var matrix = window.createEmptyMatrix(n);
+// window.findNRooksSolution = function(n, start = 0) {
+//   var solution = [];
+//   var matrix = window.createEmptyMatrix(n);
   
+//   window.board = new Board(matrix);
+//   var rows = window.board.attributes;
+//   debugger;
+//   // iterate over rows
+//   // place rook in col 0
+//   // 
+//   for (var key in rows) {
+//     if (key !== 'n') {
+//       var row = rows[key];
+//       window.placeRook(row, start);
+//       start = 0;
+//       solution.push(row);
+//     }
+//   }
+//   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
+//   return solution;
+// };
+
+
+window.findNRooksSolution = function(n) {
+  var matrix = window.createEmptyMatrix(n); 
   window.board = new Board(matrix);
-  var rows = window.board.attributes;
-  
-  // iterate over rows
-  // place rook in col 0
-  for (var key in rows) {
-    if (key !== 'n') {
-      var row = rows[key];
-      window.placeRook(row, start);
-      start = 0;
-      solution.push(row);
+  var solution;  
+
+  var rows = window.board.rows();
+  var innerFunction = function(rowNum, rows) {
+    if (rowNum === rows.length) {
+      console.log('Single solution for ' + n + ' rooks:', JSON.stringify(rows));
+      solution = rows;
+      return;
     }
-  }
+
+    for (var i = 0; i < rows.length; i++) {
+      window.placeRook(rows[rowNum], i);
+      innerFunction(rowNum + 1, rows);
+      debugger;   
+    }
+  };
+  
+  innerFunction(0, rows);
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   return solution;
 };
-
 
 window.placeRook = function(row, start) {
   for (var i = start; i < row.length; i++) {
@@ -81,7 +107,13 @@ window.countPieces = function() {
 window.countNRooksSolutions = function(n) {
   var solutionCount = 0;
   
+  //
+  // Another loop increases row index
+
+
   for (var i = 0; i < n; i++) {
+    //change starting row too place this iteration inside another loop
+    //that changes row start too working down
     window.findNRooksSolution(n, i);
     var numPieces = window.countPieces();
     if (numPieces === n) {
@@ -89,7 +121,12 @@ window.countNRooksSolutions = function(n) {
     }
   }
   if (n > 2) {
+
+    // Another loop deacreasing row index
+  
     for (var i = n - 1; i >= 0; i--) {
+      //change starting row too place this iteration inside another loop
+      //that changes row start too working up
       window.findNRooksSolution(n, i);
       var numPieces = window.countPieces();
       if (numPieces === n) {
