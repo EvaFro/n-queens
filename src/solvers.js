@@ -62,24 +62,29 @@ window.findNRooksSolution = function(n) {
   var matrix = window.createEmptyMatrix(n); 
   window.board = new Board(matrix);
   var solution;  
-
+  debugger;
   var rows = window.board.rows();
   var innerFunction = function(rowNum, rows) {
     if (rowNum === rows.length) {
-      console.log('Single solution for ' + n + ' rooks:', JSON.stringify(rows));
+      console.log(JSON.stringify(rows));
       solution = rows;
+      matrix = window.createEmptyMatrix(n);
+      window.board = new Board(matrix);
+      rows = window.board.rows();
       return;
     }
 
     for (var i = 0; i < rows.length; i++) {
       window.placeRook(rows[rowNum], i);
       innerFunction(rowNum + 1, rows);
-      debugger;   
+      rows[rowNum][rows[rowNum].indexOf(1)] = 0;
+      debugger;
+      //turn off rowNum, i colNum
     }
   };
-  
+  debugger;
   innerFunction(0, rows);
-  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
+  //console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   return solution;
 };
 
